@@ -1,7 +1,6 @@
 <?php
 
 return [
-
     /*
     |--------------------------------------------------------------------------
     | Default Filesystem Disk
@@ -15,7 +14,7 @@ return [
     |
     */
 
-    'default' => 's3',
+    'default' => 'local', // Changez 's3' en 'local'
 
     /*
     |--------------------------------------------------------------------------
@@ -45,7 +44,7 @@ return [
 
         'local' => [
             'driver' => 'local',
-            'root'   => storage_path('app'),
+            'root'   => storage_path('app/public'),
         ],
 
         'public' => [
@@ -76,7 +75,7 @@ return [
             'region' => 'eu-west-1',
             'bucket' => env('S3_STORAGE_PATH', null),
             'cache' => [
-                'store' => 'redis',
+                'store' => 'file', // Changez 'redis' en 'file'
                 'expire' => 600,
                 'prefix' => 'daybyday-storage',
             ],

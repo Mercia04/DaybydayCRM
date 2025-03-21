@@ -227,9 +227,21 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/', 'AbsenceController@store')->name('absence.store');
         Route::delete('/{absence}', 'AbsenceController@destroy')->name('absence.destroy');
     });
+
+    /**
+     * Data Management
+     */
+    Route::group(['prefix' => 'data'], function () {
+        Route::get('/clear', 'DataController@clearForm')->name('data.clear');
+        Route::post('/clear', 'DataController@clear')->name('data.clear.post');
+        Route::get('/import', 'DataController@importForm')->name('data.import');
+        Route::post('/import', 'DataController@import')->name('data.import.post');
+    });
 });
 
 Route::group(['middleware' => ['auth']], function () {
     Route::get('/dropbox-token', 'CallbackController@dropbox')->name('dropbox.callback');
     Route::get('/googledrive-token', 'CallbackController@googleDrive')->name('googleDrive.callback');
 });
+
+
