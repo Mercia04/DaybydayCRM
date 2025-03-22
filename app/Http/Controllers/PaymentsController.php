@@ -11,6 +11,8 @@ use Carbon\Carbon;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
+use App\Services\Invoice\InvoiceCalculator;
+
 
 class PaymentsController extends Controller
 {
@@ -52,6 +54,20 @@ class PaymentsController extends Controller
         if (!$invoice->isSent()) {
             session()->flash('flash_message_warning', __("Can't add payment on Invoice"));
             return redirect()->route('invoices.show', $invoice->external_id);
+        }
+
+        if ($request->amount <= 0) {
+            session()->flash('flash_message_warning', __("le montant doit être supérieur à 0"));
+            return redirect()->back();
+        }
+        
+        $invoiceCalculator = new InvoiceCalculator($invoice);
+        $amountDue = $invoiceCalculator->getAmountDue();
+        $amountDueValue = $amountDue->getAmount();
+
+        if ($request->amount * 100 > $amountDueValue) {
+            session()->flash('flash_message_warning', __("Le montant est supérieur au montant restant"));
+            return redirect()->back();
         }
 
         $payment = Payment::create([
