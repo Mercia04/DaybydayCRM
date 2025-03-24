@@ -59,3 +59,21 @@ Route::get('/invoices', [InvoiceController::class, 'index']);
 Route::get('/invoices/{externalId}', [InvoiceController::class, 'show']);
 Route::get('/payments', [PaymentApiController::class, 'index']);
 Route::get('/payments/{externalId}', [PaymentApiController::class, 'show']);
+Route::put('/payments/{externalId}/amount', [PaymentApiController::class, 'updateAmount']);
+Route::delete('/payments/{externalId}', [PaymentApiController::class, 'destroy']);
+
+Route::get('/settings/discount', 'App\Http\Controllers\DiscountSettingController@getDiscountSetting');
+// Route::get('/settings/discount', [DiscountSettingController::class, 'getDiscountSetting']);
+// Route::post('/settings/discount', [DiscountSettingController::class, 'updateDiscountSetting']);
+Route::post('/settings/discount', 'App\Http\Controllers\DiscountSettingController@updateDiscountSetting');
+
+Route::prefix('dashboard')->group(function () {
+    Route::get('/', 'App\Http\Controllers\Api\DashboardController@index');
+    Route::get('/revenue', 'App\Http\Controllers\Api\DashboardController@revenueData');
+    Route::get('/projects', 'App\Http\Controllers\Api\DashboardController@projectStatusData');
+    Route::get('/conversion', 'App\Http\Controllers\Api\DashboardController@conversionRateData');
+    Route::get('/invoices', 'App\Http\Controllers\Api\DashboardController@invoiceStatusData');
+    Route::get('/totals', 'App\Http\Controllers\Api\DashboardController@totals');
+});
+
+
