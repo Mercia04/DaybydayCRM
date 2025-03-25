@@ -169,6 +169,7 @@ Route::group(['middleware' => ['auth']], function () {
         Route::get('/overdue', 'InvoicesController@overdue')->name('invoices.overdue');
         Route::get('/{invoice}', 'InvoicesController@show')->name('invoices.show');
         Route::get('/payments-data/{invoice}', 'InvoicesController@paymentsDataTable')->name('invoice.paymentsDataTable');
+        Route::post('/updatediscount/{external_id}', 'InvoicesController@updateDiscountStatus')->name('invoice.update.discount');
     });
 
     Route::get('/money-format', 'InvoicesController@moneyFormat')->name('money.format');

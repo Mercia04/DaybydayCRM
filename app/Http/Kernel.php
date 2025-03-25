@@ -15,6 +15,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware = [
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
+        \Fruitcake\Cors\HandleCors::class,
     ];
 
     /**
@@ -32,7 +33,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\LogLastUserActivity::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\Translation::class
-            ],
+        ],
         'client.create' => [ \App\Http\Middleware\Client\CanClientCreate::class ],
         'client.update' => [ \App\Http\Middleware\Client\CanClientUpdate::class ],
         'user.create' => [ \App\Http\Middleware\User\CanUserCreate::class ],
@@ -48,12 +49,10 @@ class Kernel extends HttpKernel
         'filesystem.is.enabled' => [ \App\Http\Middleware\RedirectIfFileSystemIsNotEnabled::class],
         'is.demo' => [ \App\Http\Middleware\RedirectIfDemo::class],
         'api' => [
-            'auth:api',
+            // 'auth:api',  // Commenté car nous utilisons Sanctum
             'throttle:60,1',
             'bindings',
-
         ],
-
     ];
 
     /**
@@ -70,5 +69,7 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
+        'api.token' => \App\Http\Middleware\ApiTokenMiddleware::class,
+        'auth.sanctum' => \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
     ];
 }
