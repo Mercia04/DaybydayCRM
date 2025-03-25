@@ -43,12 +43,14 @@ class DataController extends Controller
 
         // Validation initiale des fichiers
         $files = [
-            'import_file' => 'Projets et Clients',
-            'tasks_file' => 'Tâches',
-            'leads_file' => 'Leads et Offres/Factures'
+            'import_file' => ['Projets et Clients', 2], // 2 colonnes requises : projet, client
+            'tasks_file' => ['Tâches', 2], // 2 colonnes requises : projet, tâche
+            'leads_file' => ['Leads et Offres/Factures', 6] // 6 colonnes requises : client, lead, type, produit, prix, quantité
         ];
 
-        foreach ($files as $fileKey => $fileLabel) {
+        foreach ($files as $fileKey => $fileInfo) {
+            $fileLabel = $fileInfo[0];
+            $requiredColumns = $fileInfo[1];
             $file = $request->file($fileKey);
             $path = $file->getRealPath();
             $data = array_map('str_getcsv', file($path));
@@ -59,9 +61,16 @@ class DataController extends Controller
                 continue;
             }
 
+            // Vérifier le nombre de colonnes dans chaque ligne
+            array_shift($data); // Enlever l'en-tête
+            foreach ($data as $index => $row) {
+                if (count($row) < $requiredColumns) {
+                    $errors[] = "Dans le fichier {$fileLabel}, ligne " . ($index + 2) . ": Il manque des colonnes. {$requiredColumns} colonnes sont requises.";
+                }
+            }
+
             // Vérifier les montants pour le fichier des leads
             if ($fileKey === 'leads_file') {
-                array_shift($data); // Enlever l'en-tête
                 foreach ($data as $index => $row) {
                     if (isset($row[4]) && is_numeric($row[4]) && $row[4] < 0) {
                         $errors[] = "Dans le fichier {$fileLabel}, ligne " . ($index + 2) . ": Le montant ne peut pas être négatif";
