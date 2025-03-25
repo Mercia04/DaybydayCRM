@@ -9,27 +9,55 @@
         <div class="card-body">
             <form action="{{ route('data.import.post') }}" method="POST" enctype="multipart/form-data">
                 @csrf
-                <div class="form-group">
-                    <label for="data_type">Select data type to import:</label>
-                    <select name="data_type" id="data_type" class="form-control">
-                        <option value="clients">Clients</option>
-                        <option value="projects">Projects</option>
-                        <option value="tasks">Tasks</option>
-                        <option value="leads">Leads</option>
-                    </select>
-                </div>
                 
-                <div class="form-group">
-                    <label for="import_file">Select CSV file to import:</label>
-                    <input type="file" name="import_file" id="import_file" class="form-control-file" required>
+                <div class="row mb-4">
+                    <div class="col-md-12">
+                        <h5 class="card-title">{{ __('Import Multiple Files') }}</h5>
+                        <p class="text-muted">{{ __('Please select the three required files to import.') }}</p>
+                    </div>
                 </div>
-                
-                <div class="form-check">
-                    <input type="checkbox" name="has_headers" id="has_headers" class="form-check-input" checked>
-                    <label for="has_headers" class="form-check-label">File has headers</label>
+
+                <!-- Projets et Clients -->
+                <div class="form-group mb-4">
+                    <label for="import_file">{{ __('Fichier Projets et Clients (CSV)') }}</label>
+                    <input type="file" name="import_file" id="import_file" class="form-control" accept=".csv,.txt" required>
+                    <small class="form-text text-muted">
+                        {{ __('Format attendu: project_title,client_name') }}
+                    </small>
                 </div>
-                
-                <button type="submit" class="btn btn-primary mt-3">Import Data</button>
+
+                <!-- Tâches -->
+                <div class="form-group mb-4">
+                    <label for="tasks_file">{{ __('Fichier Tâches (CSV)') }}</label>
+                    <input type="file" name="tasks_file" id="tasks_file" class="form-control" accept=".csv,.txt" required>
+                    <small class="form-text text-muted">
+                        {{ __('Format attendu: project_title,task_title') }}
+                    </small>
+                </div>
+
+                <!-- Leads et Offres/Factures -->
+                <div class="form-group mb-4">
+                    <label for="leads_file">{{ __('Fichier Leads et Offres/Factures (CSV)') }}</label>
+                    <input type="file" name="leads_file" id="leads_file" class="form-control" accept=".csv,.txt" required>
+                    <small class="form-text text-muted">
+                        {{ __('Format attendu: client_name,lead_title,type,produit,prix,quantite') }}
+                    </small>
+                </div>
+
+                @if(session('flash_message'))
+                    <div class="alert alert-{{ strpos(session('flash_message'), 'Erreur') !== false ? 'danger' : 'success' }} mb-4">
+                        {{ session('flash_message') }}
+                    </div>
+                @endif
+
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fa fa-upload mr-2"></i>{{ __('Importer les données') }}
+                    </button>
+                    <a href="{{ route('dashboard') }}" class="btn btn-outline-secondary">
+                        {{ __('Annuler') }}
+                    </a>
+                </div>
             </form>
         </div>
     </div>

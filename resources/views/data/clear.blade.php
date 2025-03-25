@@ -6,30 +6,18 @@
 
 @section('content')
     <div class="card">
-        <div class="card-body">
-            <div class="alert alert-warning">
-                <strong>Warning!</strong> Clearing data is irreversible. Please make sure you have a backup.
+        <div class="card-body text-center">
+            <div class="alert alert-warning mb-4">
+                <strong>Warning!</strong> Clearing all data is irreversible. Please make sure you have a backup.
             </div>
             
             <form action="{{ route('data.clear.post') }}" method="POST">
                 @csrf
-                <div class="form-group">
-                    <label for="data_type">Select data type to clear:</label>
-                    <select name="data_type" id="data_type" class="form-control">
-                        <option value="clients">Clients</option>
-                        <option value="projects">Projects</option>
-                        <option value="tasks">Tasks</option>
-                        <option value="leads">Leads</option>
-                        <option value="all">All Data</option>
-                    </select>
-                </div>
+                <input type="hidden" name="data_type" value="all">
                 
-                <div class="form-group">
-                    <label for="confirm">Type "CONFIRM" to proceed:</label>
-                    <input type="text" name="confirm" id="confirm" class="form-control" required>
-                </div>
-                
-                <button type="submit" class="btn btn-danger">Clear Data</button>
+                <button type="submit" class="btn btn-danger btn-lg">
+                    <i class="fa fa-trash mr-2"></i>{{ __('Clear All Data') }}
+                </button>
             </form>
         </div>
     </div>
